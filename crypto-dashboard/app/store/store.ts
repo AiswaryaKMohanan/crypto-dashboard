@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
+const dummyReducer = (state = {}) => state;
 
 export const store = configureStore({
-  reducer: {},
+  reducer: dummyReducer,
 });
 
 export type RootState = ReturnType<typeof store.getState>;
