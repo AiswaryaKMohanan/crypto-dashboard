@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Coin } from "../types/types";
 import CoinCard from "./CoinCard";
+import Link from "next/link";
 
 interface Props {
   coins: Coin[];
@@ -59,9 +60,14 @@ export default function CoinList({ coins }: Props) {
         <option value="gainers">Gainers</option>
         <option value="losers">Losers</option>
       </select>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredCoins.map((coin) => (
-          <CoinCard key={coin.id} coin={coin} />
+          <Link href={`/coin/${coin.id}`} key={coin.id}>
+            <div className="bg-white shadow-md rounded-xl p-4 cursor-pointer hover:shadow-lg transition">
+              <CoinCard coin={coin} />
+            </div>
+          </Link>
         ))}
       </div>
     </div>
