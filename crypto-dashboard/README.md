@@ -20,14 +20,23 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+# Crypto Dashboard
 
-To learn more about Next.js, take a look at the following resources:
+A Next.js 16 crypto dashboard with real-time data from CoinGecko API.  
+Features: React, Next.js, TypeScript, Redux/Zustand, Tailwind CSS, Material UI, Dark Mode, Charts.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
+- Dark mode toggle
+- Coin list with current price & 24h change
+- Coin detail page with stats & 30-day price chart
+- Responsive design
+- API integration with error handling
+- Optimized for performance
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
+Next.js 16 | React | TypeScript | Tailwind CSS | Redux Toolkit | Axios | Chart.js
+
+
 
 ## Deploy on Vercel
 
