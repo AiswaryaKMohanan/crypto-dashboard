@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { Coin } from "../types/types";
 import CoinCard from "./CoinCard";
+import Link from "next/link";
+import SkeletonCard from "./SkeletonCard";
 
 interface Props {
   coins: Coin[];
@@ -11,30 +13,58 @@ interface Props {
 export default function CoinList({ coins }: Props) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "gainers" | "losers">("all");
+  const [sortBy, setSortBy] = useState<"market_cap" | "price" | "change">(
+    "market_cap",
+  );
+  const [loading, setLoading] = useState(false);
 
   const filteredCoins = useMemo(() => {
-    return coins
+    setLoading(true);
+    let result = coins
       .filter(
         (coin) =>
           coin.name.toLowerCase().includes(search.toLowerCase()) ||
           coin.symbol.toLowerCase().includes(search.toLowerCase()),
       )
       .filter((coin) => {
-        if (filter === "gainers") {
+        if (filter === "gainers")
           return (
             coin.price_change_percentage_24h !== null &&
             coin.price_change_percentage_24h > 0
           );
-        }
-        if (filter === "losers") {
+
+        if (filter === "losers")
           return (
             coin.price_change_percentage_24h !== null &&
             coin.price_change_percentage_24h < 0
           );
-        }
+
         return true;
       });
-  }, [coins, search, filter]);
+
+    result = [...result].sort((a, b) => {
+      if (sortBy === "market_cap") return b.market_cap - a.market_cap;
+      if (sortBy === "price") return b.current_price - a.current_price;
+      if (sortBy === "change")
+        return (
+          (b.price_change_percentage_24h ?? 0) -
+          (a.price_change_percentage_24h ?? 0)
+        );
+      return 0;
+    });
+    setLoading(false);
+    return result;
+  }, [coins, search, filter, sortBy]);
+
+  if (loading) {
+    return (
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-row sm:flex-col gap-4 mb-5">
@@ -59,9 +89,26 @@ export default function CoinList({ coins }: Props) {
         <option value="gainers">Gainers</option>
         <option value="losers">Losers</option>
       </select>
+
+      <select
+        className="border rounded-lg px-4 py-2"
+        value={sortBy}
+        onChange={(e) =>
+          setSortBy(e.target.value as "market_cap" | "price" | "change")
+        }
+      >
+        <option value="market_cap">Market Cap</option>
+        <option value="price">Price</option>
+        <option value="change">24h Change</option>
+      </select>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredCoins.map((coin) => (
-          <CoinCard key={coin.id} coin={coin} />
+          <Link href={`/coin/${coin.id}`} key={coin.id}>
+            <div className="bg-white shadow-md rounded-xl p-4 cursor-pointer hover:shadow-lg transition">
+              <CoinCard coin={coin} />
+            </div>
+          </Link>
         ))}
       </div>
     </div>
